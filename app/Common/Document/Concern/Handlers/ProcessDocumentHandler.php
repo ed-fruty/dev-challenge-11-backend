@@ -1,16 +1,43 @@
 <?php
 namespace App\Common\Document\Concern\Handlers;
 
+use App\Common\Document\Concern\Commands\MarkDocumentAsProcessedCommand;
 use App\Common\Document\Concern\Commands\ProcessDocumentCommand;
 use App\Common\Document\Concern\Traits\DocumentRepositoryAware;
+use App\Common\Document\Concern\ValueObjects\ParsedVote;
+use App\Common\Document\Concern\ValueObjects\ParsedVoter;
 use App\Common\Document\Contracts\DocumentInterface;
+use App\Common\Document\Contracts\DocumentReaderInterface;
 use App\Common\Document\Contracts\DocumentRepositoryAwareInterface;
+use App\Common\Laravel\CommandBus\Contracts\CommandBusAwareInterface;
+use App\Common\Laravel\CommandBus\Traits\CommandBusAware;
+use App\Common\Vote\Concern\Commands\CreateVoteCommand;
 use App\Common\Vote\Concern\Traits\ClassificatorRepositoriesAware;
 use App\Common\Vote\Contracts\Classificators\ClassificatorRepositoriesAwareInterface;
+use App\Common\Vote\Contracts\VoteInterface;
 
-class ProcessDocumentHandler implements DocumentRepositoryAwareInterface, ClassificatorRepositoriesAwareInterface
+/**
+ * Class ProcessDocumentHandler
+ * @package App\Common\Document\Concern\Handlers
+ */
+class ProcessDocumentHandler implements
+    DocumentRepositoryAwareInterface, ClassificatorRepositoriesAwareInterface, CommandBusAwareInterface
 {
-    use DocumentRepositoryAware, ClassificatorRepositoriesAware;
+    use DocumentRepositoryAware, ClassificatorRepositoriesAware, CommandBusAware;
+
+    /**
+     * @var DocumentReaderInterface
+     */
+    private $documentReader;
+
+    /**
+     * ProcessDocumentHandler constructor.
+     * @param DocumentReaderInterface $documentReader
+     */
+    public function __construct(DocumentReaderInterface $documentReader)
+    {
+        $this->documentReader = $documentReader;
+    }
 
     /**
      * @param ProcessDocumentCommand $command
@@ -21,54 +48,38 @@ class ProcessDocumentHandler implements DocumentRepositoryAwareInterface, Classi
 
         $parser = $this->documentReader->getParser($document);
 
-        $vote = $this->createVote($parser);
-        $this->writeVoteResults($vote, $parser->getVoters());
-        $this->markDocumentAsProcessed($document);
+        foreach ($parser->parseVotes($document)->all() as $parsedVote) {
 
+            $entityVote = $this->createVote($parsedVote, $document);
+            $this->writeVoteBlanks($entityVote, $parsedVote->getVoters());
+        }
+
+        $this->markDocumentAsProcessed($document);
     }
 
     /**
-     * @param $parser
-     * @return mixed
+     * @param ParsedVote $parsedVote
+     * @param DocumentInterface $document
+     * @return VoteInterface
      */
-    protected function createVote($parser)
+    protected function createVote(ParsedVote $parsedVote, DocumentInterface $document): VoteInterface
     {
-        $council = $this->councilRepository->findByNameOrCreate($parser->getCouncil());
-        $session = $this->sessionRepository->findByNameOrCreate($parser->getSession());
-        $convocation = $this->convocationRepository->findByNameOrCreate($parser->getConvocation());
-        $voteType = $this->voteTypeRepository->findByNameOrCreate($parser->getVoteType());
+        $command = new CreateVoteCommand($parsedVote, $document);
 
-        $writeVote = $this->voteRepository->getVoteFactory()->createWriteVote();
-        $writeVote
-            ->setTopic($parser->getTopic())
-            ->setNumber($parser->getNumber())
-            ->setDocument($parser->getDocument())
-            ->setVoteDate($parser->getVoteDate())
-            ->setApprovedAmount($parser->getApprovedAmount())
-            ->setDeclinedAmount($parser->getDeclinedAmount())
-            ->setAbstainedAmount($parser->getAbstainedAmount())
-            ->setNotVotedAmount($parser->getNotVotedAmount())
-            ->setMissedAmount($parser->getMissedAmount())
-            ->setDecision($parser->getDecision())
-            ->setCouncil($council)
-            ->setSession($session)
-            ->setConvocation($convocation)
-            ->setVoteType($voteType);
-
-        return $writeVote->getReadVote();
+        return $this->commandBus->dispatchNow($command);
     }
 
     /**
      * @param VoteInterface $vote
      * @param array $voters
      */
-    protected function writeVoteResults(VoteInterface $vote, array $voters)
+    protected function writeVoteBlanks(VoteInterface $vote, array $voters)
     {
         /** @var ParsedVoter $voter */
         foreach ($voters as $voter) {
             $voterEntity = $this->voterRepository->findByNameOrCreate($voter->getName());
 
-            $command = new CreateVoteBlankCommand($vote->getId(), $voterEntity->getId(), $voter->getDecision());
+            $command = new CreateVoteBlankCommand($vote->getId(), $voterEntity->getId(), $voter->getVote());
             $this->commandBus->dispatch($command);
         };
     }

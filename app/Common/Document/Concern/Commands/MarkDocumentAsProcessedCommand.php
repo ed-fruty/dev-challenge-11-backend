@@ -3,7 +3,7 @@ namespace App\Common\Document\Concern\Commands;
 
 use App\Common\Document\Concern\ValueObjects\DocumentId;
 
-class MarkDocumentAsProcessCommand
+class MarkDocumentAsProcessedCommand
 {
     /**
      * @var DocumentId

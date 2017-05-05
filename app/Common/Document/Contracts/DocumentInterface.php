@@ -16,12 +16,22 @@ interface DocumentInterface
     /**
      * @return string
      */
+    public function getExtension() : string;
+
+    /**
+     * @return string
+     */
     public function getFilename() : string;
 
     /**
      * @return string
      */
     public function getPath() : string;
+
+    /**
+     * @return string
+     */
+    public function getFullPath() : string;
 
     /**
      * @return string

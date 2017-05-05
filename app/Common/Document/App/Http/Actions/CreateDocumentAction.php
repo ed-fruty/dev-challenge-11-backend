@@ -18,6 +18,6 @@ class CreateDocumentAction implements CommandBusAwareInterface
     {
         $command = new CreateDocumentCommand($request->file('document'));
 
-        return $this->commandBus->dispatch($command);
+        return $this->commandBus->dispatchNow($command);
     }
 }
