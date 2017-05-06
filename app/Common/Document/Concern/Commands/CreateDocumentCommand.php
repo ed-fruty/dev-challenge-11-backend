@@ -26,4 +26,12 @@ final class CreateDocumentCommand
     {
         return $this->file;
     }
+
+    /**
+     * @return bool
+     */
+    public function hasFile(): bool
+    {
+        return $this->file instanceof UploadedFile;
+    }
 }

@@ -21,12 +21,6 @@ interface DocumentRepositoryInterface
     public function save(DocumentInterface $document) : bool;
 
     /**
-     * @param DocumentId $id
-     * @return bool
-     */
-    public function remove(DocumentId $id) : bool;
-
-    /**
      * @return DocumentFactoryInterface
      */
     public function getDocumentFactory() : DocumentFactoryInterface;

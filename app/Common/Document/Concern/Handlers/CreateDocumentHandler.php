@@ -34,9 +34,6 @@ class CreateDocumentHandler implements DocumentRepositoryAwareInterface, EventDi
      */
     public function handle(CreateDocumentCommand $command)
     {
-        /*
-         * Define vars
-         */
         $filename = $this->filenameGenerator->fromUploadedFile($command->getFile());
         $path = storage_path('documents');
         $disk = env('FILESYSTEM_DRIVER');
@@ -44,7 +41,9 @@ class CreateDocumentHandler implements DocumentRepositoryAwareInterface, EventDi
         /*
          * Store file local or on the cloud
          */
-        $command->getFile()->storeAs($path, $filename, compact('disk'));
+        if ($command->hasFile()) {
+            $command->getFile()->storeAs($path, $filename, compact('disk'));
+        }
 
         /*
          * Create document entity

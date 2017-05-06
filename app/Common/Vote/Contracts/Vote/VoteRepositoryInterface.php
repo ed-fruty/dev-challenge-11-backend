@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Common\Vote\Contracts;
+namespace App\Common\Vote\Contracts\Vote;
 
 use App\Common\Vote\Concern\ValueObjects\VoteId;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -19,4 +19,9 @@ interface VoteRepositoryInterface
      * @return bool
      */
     public function save(VoteInterface $vote): bool;
+
+    /**
+     * @return VoteFactoryInterface
+     */
+    public function getVoteFactory(): VoteFactoryInterface;
 }

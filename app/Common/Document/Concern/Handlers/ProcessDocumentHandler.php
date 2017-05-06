@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Common\Document\Concern\Handlers;
 
 use App\Common\Document\Concern\Commands\MarkDocumentAsProcessedCommand;
@@ -11,10 +12,11 @@ use App\Common\Document\Contracts\DocumentReaderInterface;
 use App\Common\Document\Contracts\DocumentRepositoryAwareInterface;
 use App\Common\Laravel\CommandBus\Contracts\CommandBusAwareInterface;
 use App\Common\Laravel\CommandBus\Traits\CommandBusAware;
+use App\Common\Vote\Concern\Commands\CreateVoteBlankCommand;
 use App\Common\Vote\Concern\Commands\CreateVoteCommand;
 use App\Common\Vote\Concern\Traits\ClassificatorRepositoriesAware;
 use App\Common\Vote\Contracts\Classificators\ClassificatorRepositoriesAwareInterface;
-use App\Common\Vote\Contracts\VoteInterface;
+use App\Common\Vote\Contracts\Vote\VoteInterface;
 
 /**
  * Class ProcessDocumentHandler

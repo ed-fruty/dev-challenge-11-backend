@@ -2,7 +2,7 @@
 
 namespace App\Common\Vote\Concern\Traits;
 
-use App\Common\Vote\Contracts\VoteRepositoryInterface;
+use App\Common\Vote\Contracts\Vote\VoteRepositoryInterface;
 
 trait VoteRepositoryAware
 {

@@ -11,6 +11,7 @@ class CreateVoteCommand
      * @var ParsedVote
      */
     private $parsedVote;
+
     /**
      * @var DocumentInterface
      */
@@ -33,5 +34,13 @@ class CreateVoteCommand
     public function getParsedVote(): ParsedVote
     {
         return $this->parsedVote;
+    }
+
+    /**
+     * @return DocumentInterface
+     */
+    public function getDocument(): DocumentInterface
+    {
+        return $this->document;
     }
 }

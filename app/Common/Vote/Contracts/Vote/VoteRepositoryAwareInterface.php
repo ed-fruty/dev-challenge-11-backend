@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Common\Vote\Contracts;
+namespace App\Common\Vote\Contracts\Vote;
 
 interface VoteRepositoryAwareInterface
 {

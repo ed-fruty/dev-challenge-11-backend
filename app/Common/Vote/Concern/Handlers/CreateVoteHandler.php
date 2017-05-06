@@ -5,11 +5,12 @@ namespace App\Common\Vote\Concern\Handlers;
 use App\Common\Laravel\Events\Contracts\EventDispatcherAwareInterface;
 use App\Common\Laravel\Events\Traits\EventDispatcherAware;
 use App\Common\Vote\Concern\Commands\CreateVoteCommand;
+use App\Common\Vote\Concern\Events\VoteWasCreatedEvent;
 use App\Common\Vote\Concern\Traits\ClassificatorRepositoriesAware;
 use App\Common\Vote\Concern\Traits\VoteRepositoryAware;
 use App\Common\Vote\Contracts\Classificators\ClassificatorRepositoriesAwareInterface;
-use App\Common\Vote\Contracts\VoteInterface;
-use App\Common\Vote\Contracts\VoteRepositoryAwareInterface;
+use App\Common\Vote\Contracts\Vote\VoteInterface;
+use App\Common\Vote\Contracts\Vote\VoteRepositoryAwareInterface;
 
 class CreateVoteHandler implements VoteRepositoryAwareInterface, EventDispatcherAwareInterface,
     ClassificatorRepositoriesAwareInterface
@@ -47,7 +48,7 @@ class CreateVoteHandler implements VoteRepositoryAwareInterface, EventDispatcher
             ->setTopic($command->getParsedVote()->getTopic())
             ->setNumber($command->getParsedVote()->getNumber())
             ->setDocument($command->getDocument())
-            ->setVoteDate($command->getParsedVote()->getDate())
+            ->setDate($command->getParsedVote()->getDate())
             ->setApprovedAmount($command->getParsedVote()->getApprovedAmount())
             ->setDeclinedAmount($command->getParsedVote()->getDeclinedAmount())
             ->setAbstainedAmount($command->getParsedVote()->getAbstainedAmount())
@@ -57,7 +58,7 @@ class CreateVoteHandler implements VoteRepositoryAwareInterface, EventDispatcher
             ->setCouncil($council)
             ->setSession($session)
             ->setConvocation($convocation)
-            ->setVoteType($voteType);
+            ->setType($voteType);
 
         return $writeVote->getReadVote();
     }

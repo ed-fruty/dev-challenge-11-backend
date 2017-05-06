@@ -1,12 +1,14 @@
 <?php
 namespace App\Common\Vote\Contracts\Classificators;
 
-interface ClassificatorInterface 
+use App\Common\Vote\Concern\ValueObjects\ClassificatorId;
+
+interface ClassificatorInterface
 {
     /**
      * @return ClassificatorId
      */
-    public function getId() : ClassificatorId;
+    public function getId(): ClassificatorId;
 
     /**
      * @return string

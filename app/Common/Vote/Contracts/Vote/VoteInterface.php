@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Common\Vote\Contracts;
+namespace App\Common\Vote\Contracts\Vote;
 
 use App\Common\Vote\Concern\ValueObjects\VoteId;
 use App\Common\Vote\Contracts\Classificators\ConvocationInterface;
@@ -8,6 +8,7 @@ use App\Common\Vote\Contracts\Classificators\CouncilInterface;
 use App\Common\Vote\Contracts\Classificators\SessionInterface;
 use App\Common\Vote\Contracts\Classificators\VoterInterface;
 use App\Common\Vote\Contracts\Classificators\VoteTypeInterface;
+use App\Common\Vote\Contracts\VoteBlank\VoteBlankInterface;
 use Carbon\Carbon;
 
 interface VoteInterface
@@ -91,4 +92,9 @@ interface VoteInterface
      * @return VoterInterface[]
      */
     public function getVoters();
+
+    /**
+     * @return VoteBlankInterface[]
+     */
+    public function getBlanks();
 }

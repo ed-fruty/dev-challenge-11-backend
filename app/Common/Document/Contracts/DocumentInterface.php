@@ -2,6 +2,8 @@
 namespace App\Common\Document\Contracts;
 
 use App\Common\Document\Concern\ValueObjects\DocumentId;
+use App\Common\Vote\Contracts\Vote\VoteInterface;
+use Illuminate\Database\Eloquent\Collection;
 
 interface DocumentInterface
 {
@@ -47,4 +49,9 @@ interface DocumentInterface
      * @return bool
      */
     public function isProcessed() : bool;
+
+    /**
+     * @return VoteInterface[]|Collection
+     */
+    public function getVotes();
 }
