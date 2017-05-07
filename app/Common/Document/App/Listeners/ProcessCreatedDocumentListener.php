@@ -6,7 +6,7 @@ use App\Common\Document\Concern\Events\DocumentWasCreatedEvent;
 use App\Common\Laravel\CommandBus\Contracts\CommandBusAwareInterface;
 use App\Common\Laravel\CommandBus\Traits\CommandBusAware;
 
-class HandleCreatedDocumentListener implements CommandBusAwareInterface
+class ProcessCreatedDocumentListener implements CommandBusAwareInterface
 {
     use CommandBusAware;
 
