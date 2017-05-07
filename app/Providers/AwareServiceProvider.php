@@ -7,6 +7,8 @@ use App\Common\Document\Contracts\DocumentRepositoryInterface;
 use App\Common\Laravel\CommandBus\Contracts\CommandBusAwareInterface;
 use App\Common\Laravel\Events\Contracts\EventDispatcherAwareInterface;
 use App\Common\Laravel\Filesystem\Contracts\FileSystemFactoryAwareInterface;
+use App\Common\Specifications\Contracts\SpecificationSearchAwareInterface;
+use App\Common\Specifications\SpecificationSearch;
 use App\Common\Vote\Contracts\Classificators\ClassificatorRepositoriesAwareInterface;
 use App\Common\Vote\Contracts\Classificators\ConvocationRepositoryInterface;
 use App\Common\Vote\Contracts\Classificators\CouncilRepositoryInterface;
@@ -53,6 +55,10 @@ class AwareServiceProvider extends ServiceProvider
 
         VoteBlankRepositoryAwareInterface::class    => [
             'setVoteBlankRepository'    => VoteBlankRepositoryInterface::class
+        ],
+
+        SpecificationSearchAwareInterface::class => [
+            'setSpecificationSearch'    => SpecificationSearch::class
         ]
     ];
 

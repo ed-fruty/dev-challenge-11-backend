@@ -6,7 +6,6 @@ use App\Common\Document\Contracts\DocumentRepositoryInterface;
 use App\Common\Document\Contracts\FilenameGeneratorInterface;
 use App\Common\Document\Infrastructure\Eloquent\DocumentRepository;
 use App\Common\Document\Infrastructure\Generators\RandomFilenameGenerator;
-use App\Common\Specifications\SpecificationSearch;
 use App\Common\Vote\Contracts\Classificators\ConvocationRepositoryInterface;
 use App\Common\Vote\Contracts\Classificators\CouncilRepositoryInterface;
 use App\Common\Vote\Contracts\Classificators\SessionRepositoryInterface;
