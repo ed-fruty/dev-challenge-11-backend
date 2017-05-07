@@ -6,6 +6,7 @@ namespace App\Common\Document\Infrastructure\Eloquent;
 use App\Common\Document\Concern\ValueObjects\DocumentId;
 use App\Common\Document\Contracts\DocumentInterface;
 use App\Common\Vote\Contracts\Vote\VoteInterface;
+use App\Common\Vote\Infrastructure\Eloquent\Vote\Vote;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 

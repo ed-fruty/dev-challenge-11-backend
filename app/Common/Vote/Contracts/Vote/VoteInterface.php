@@ -2,6 +2,7 @@
 
 namespace App\Common\Vote\Contracts\Vote;
 
+use App\Common\Document\Contracts\DocumentInterface;
 use App\Common\Vote\Concern\ValueObjects\VoteId;
 use App\Common\Vote\Contracts\Classificators\ConvocationInterface;
 use App\Common\Vote\Contracts\Classificators\CouncilInterface;
@@ -97,4 +98,9 @@ interface VoteInterface
      * @return VoteBlankInterface[]
      */
     public function getBlanks();
+
+    /**
+     * @return DocumentInterface
+     */
+    public function getDocument(): DocumentInterface;
 }

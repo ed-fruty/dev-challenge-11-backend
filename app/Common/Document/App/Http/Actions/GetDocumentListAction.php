@@ -4,13 +4,11 @@ namespace App\Common\Document\App\Http\Actions;
 
 
 use App\Common\Document\App\Http\Requests\GetDocumentListRequest;
-use App\Common\Document\App\Http\Responders\GetDocumentListResponder;
 use App\Common\Document\Concern\Specifications\StatusSpecification;
 use App\Common\Document\Concern\Traits\DocumentRepositoryAware;
 use App\Common\Document\Contracts\DocumentInterface;
 use App\Common\Document\Contracts\DocumentRepositoryAwareInterface;
 use App\Common\Specifications\Shared\CollectionsSpecification;
-use App\Common\Specifications\Shared\PaginatedSpecification;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\Paginator;
 

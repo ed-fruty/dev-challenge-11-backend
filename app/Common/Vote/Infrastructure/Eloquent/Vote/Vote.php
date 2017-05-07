@@ -3,6 +3,8 @@
 namespace App\Common\Vote\Infrastructure\Eloquent\Vote;
 
 
+use App\Common\Document\Contracts\DocumentInterface;
+use App\Common\Document\Infrastructure\Eloquent\Document;
 use App\Common\Vote\Concern\ValueObjects\VoteId;
 use App\Common\Vote\Contracts\Classificators\ConvocationInterface;
 use App\Common\Vote\Contracts\Classificators\CouncilInterface;
@@ -32,12 +34,19 @@ class Vote extends Model implements VoteInterface
     protected const ATTRIBUTE_MISSED_AMOUNT = 'missed_amount';
     protected const ATTRIBUTE_DECISION = 'decision';
 
+    protected const ATTRIBUTE_COUNCIL = 'council_id';
+    protected const ATTRIBUTE_SESSION = 'session_id';
+    protected const ATTRIBUTE_CONVOCATION = 'convocation_id';
+    protected const ATTRIBUTE_TYPE = 'type_id';
+    protected const ATTRIBUTE_DOCUMENT = 'document_id';
+
     protected const RELATION_COUNCIL = 'council';
     protected const RELATION_SESSION = 'session';
     protected const RELATION_CONVOCATION = 'convocation';
     protected const RELATION_TYPE = 'type';
     protected const RELATION_VOTERS = 'voters';
     protected const RELATION_BLANKS = 'blanks';
+    protected const RELATION_DOCUMENT = 'document';
 
     /**
      * @var string
@@ -173,6 +182,14 @@ class Vote extends Model implements VoteInterface
     }
 
     /**
+     * @return DocumentInterface
+     */
+    public function getDocument(): DocumentInterface
+    {
+        return $this->getRelation(static::RELATION_DOCUMENT);
+    }
+
+    /**
      * @return VoteBlankInterface[]
      */
     public function getBlanks()
@@ -226,5 +243,13 @@ class Vote extends Model implements VoteInterface
     public function blanks()
     {
         return $this->hasMany(VoteBlank::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function document()
+    {
+        return $this->belongsTo(Document::class);
     }
 }
