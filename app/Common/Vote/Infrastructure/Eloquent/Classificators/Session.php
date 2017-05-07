@@ -9,6 +9,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class Session extends Model implements SessionInterface
 {
+    /**
+     * @var string
+     */
+    protected $table = 'sessions';
+
+    /**
+     * @var array
+     */
+    protected $fillable = ['name'];
 
     /**
      * @return ClassificatorId

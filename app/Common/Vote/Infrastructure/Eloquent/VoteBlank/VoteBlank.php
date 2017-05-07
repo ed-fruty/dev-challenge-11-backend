@@ -25,6 +25,27 @@ class VoteBlank extends Model implements VoteBlankInterface
     protected $table = 'vote_blanks';
 
     /**
+     * @var array
+     */
+    protected $with = [
+        //'voter', 'vote'
+    ];
+
+    /**
+     * @var array
+     */
+    protected $hidden = [
+        'voter_id', 'vote_id'
+    ];
+
+    /**
+     * @var array
+     */
+    protected $appends = [
+        'voice_value', 'voter_item', 'vote_item'
+    ];
+
+    /**
      * @return VoteBlankId
      */
     public function getId(): VoteBlankId
@@ -37,7 +58,7 @@ class VoteBlank extends Model implements VoteBlankInterface
      */
     public function getVoter(): VoterInterface
     {
-        return $this->getRelation(static::RELATION_VOTER);
+        return $this->getAttribute(static::RELATION_VOTER);
     }
 
     /**
@@ -45,7 +66,7 @@ class VoteBlank extends Model implements VoteBlankInterface
      */
     public function getVote(): VoteInterface
     {
-        return $this->getRelation(static::RELATION_VOTE);
+        return $this->getAttribute(static::RELATION_VOTE);
     }
 
     /**
@@ -70,5 +91,29 @@ class VoteBlank extends Model implements VoteBlankInterface
     public function vote()
     {
         return $this->belongsTo(Vote::class);
+    }
+
+    /**
+     * @return string
+     */
+    public function getVoiceValueAttribute()
+    {
+        return $this->getVoice()->getName();
+    }
+
+    /**
+     * @return VoterInterface
+     */
+    public function getVoterItemAttribute()
+    {
+        return $this->getVoter();
+    }
+
+    /**
+     * @return VoteInterface
+     */
+    public function getVoteItemAttribute()
+    {
+        return $this->getVote();
     }
 }

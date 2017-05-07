@@ -21,6 +21,7 @@ use App\Common\Vote\Infrastructure\Eloquent\Classificators\Voter;
 use App\Common\Vote\Infrastructure\Eloquent\Classificators\VoteType;
 use App\Common\Vote\Infrastructure\Eloquent\VoteBlank\VoteBlank;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
 class Vote extends Model implements VoteInterface
@@ -53,7 +54,23 @@ class Vote extends Model implements VoteInterface
     /**
      * @var string
      */
-    protected $table = 'votes';
+    protected $with = [
+        'council', 'session', 'type'
+    ];
+
+    /**
+     * @var array
+     */
+    protected $hidden = [
+        'council_id', 'session_id', 'convocation_id', 'type_id', 'document_id'
+    ];
+
+    /**
+     * @var array
+     */
+    protected $appends = [
+        'decision_value'
+    ];
 
     /**
      * @return VoteId
@@ -140,7 +157,7 @@ class Vote extends Model implements VoteInterface
      */
     public function getCouncil(): CouncilInterface
     {
-        return $this->getRelation(static::RELATION_COUNCIL);
+        return $this->getAttribute(static::RELATION_COUNCIL);
     }
 
     /**
@@ -148,7 +165,7 @@ class Vote extends Model implements VoteInterface
      */
     public function getSession(): SessionInterface
     {
-        return $this->getRelation(static::RELATION_SESSION);
+        return $this->getAttribute(static::RELATION_SESSION);
     }
 
     /**
@@ -156,7 +173,7 @@ class Vote extends Model implements VoteInterface
      */
     public function getConvocation(): ConvocationInterface
     {
-        return $this->getRelation(static::RELATION_CONVOCATION);
+        return $this->getAttribute(static::RELATION_CONVOCATION);
     }
 
     /**
@@ -164,7 +181,7 @@ class Vote extends Model implements VoteInterface
      */
     public function getType(): VoteTypeInterface
     {
-        return $this->getRelation(static::RELATION_TYPE);
+        return $this->getAttribute(static::RELATION_TYPE);
     }
 
     /**
@@ -172,7 +189,7 @@ class Vote extends Model implements VoteInterface
      */
     public function getVoters()
     {
-        return $this->getRelation(static::RELATION_VOTERS);
+        return $this->getAttribute(static::RELATION_VOTERS);
     }
 
     /**
@@ -180,7 +197,7 @@ class Vote extends Model implements VoteInterface
      */
     public function getDocument(): DocumentInterface
     {
-        return $this->getRelation(static::RELATION_DOCUMENT);
+        return $this->getAttribute(static::RELATION_DOCUMENT);
     }
 
     /**
@@ -188,7 +205,7 @@ class Vote extends Model implements VoteInterface
      */
     public function getBlanks()
     {
-        return $this->getRelation(static::RELATION_BLANKS);
+        return $this->getAttribute(static::RELATION_BLANKS);
     }
 
     /**
@@ -228,7 +245,12 @@ class Vote extends Model implements VoteInterface
      */
     public function voters()
     {
-        return $this->hasManyThrough(Voter::class, VoteBlank::class);
+        /** @var Collection $blanks */
+        $blanks = $this->getBlanks();
+
+        return $blanks->map(function(VoteBlank $blank) {
+            return $blank->getVoter();
+        });
     }
 
     /**
@@ -245,5 +267,13 @@ class Vote extends Model implements VoteInterface
     public function document()
     {
         return $this->belongsTo(Document::class);
+    }
+
+    /**
+     * @return string
+     */
+    public function getDecisionValueAttribute()
+    {
+        return $this->getDecision()->getName();
     }
 }

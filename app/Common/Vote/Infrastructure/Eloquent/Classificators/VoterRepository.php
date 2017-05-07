@@ -6,6 +6,7 @@ namespace App\Common\Vote\Infrastructure\Eloquent\Classificators;
 use App\Common\Vote\Concern\ValueObjects\ClassificatorId;
 use App\Common\Vote\Contracts\Classificators\VoterInterface;
 use App\Common\Vote\Contracts\Classificators\VoterRepositoryInterface;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
 class VoterRepository implements VoterRepositoryInterface
@@ -41,5 +42,22 @@ class VoterRepository implements VoterRepositoryInterface
     public function findByNameOrCreate(string $name): VoterInterface
     {
         return $this->model->newQuery()->firstOrCreate(compact('name'));
+    }
+
+    /**
+     * @param string $name
+     * @return VoterInterface
+     */
+    public function findByName(string $name)
+    {
+        return $this->model->newQuery()->where('name', $name)->first();
+    }
+
+    /**
+     * @return VoterInterface[]|Collection
+     */
+    public function all()
+    {
+        return $this->model->newQuery()->get();
     }
 }

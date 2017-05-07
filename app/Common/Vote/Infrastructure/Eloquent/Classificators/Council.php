@@ -11,6 +11,16 @@ class Council extends Model implements CouncilInterface
 {
 
     /**
+     * @var string
+     */
+    protected $table = 'councils';
+
+    /**
+     * @var array
+     */
+    protected $fillable = ['name'];
+
+    /**
      * @return ClassificatorId
      */
     public function getId(): ClassificatorId

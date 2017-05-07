@@ -14,6 +14,13 @@ use Illuminate\Database\Eloquent\Model;
 class Convocation extends Model implements ConvocationInterface
 {
 
+    protected $table = 'convocations';
+
+    /**
+     * @var array
+     */
+    protected $fillable = ['name'];
+
     /**
      * @return ClassificatorId
      */

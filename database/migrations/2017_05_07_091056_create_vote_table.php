@@ -27,6 +27,7 @@ class CreateVoteTable extends Migration
             $table->integer('council_id')->nullable();
             $table->integer('session_id')->nullable();
             $table->integer('type_id')->nullable();
+            $table->integer('convocation_id')->nullable();
             $table->integer('document_id');
             $table->timestamps();
         });

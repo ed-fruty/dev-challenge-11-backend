@@ -26,6 +26,13 @@ class Document extends Model implements DocumentInterface
     protected $table = 'documents';
 
     /**
+     * @var array
+     */
+    protected $appends = [
+        'status_value'
+    ];
+
+    /**
      * @return DocumentId
      */
     public function getId(): DocumentId
@@ -94,7 +101,7 @@ class Document extends Model implements DocumentInterface
      */
     public function getVotes()
     {
-        return $this->getRelation(static::RELATION_VOTES);
+        return $this->getAttribute(static::RELATION_VOTES);
     }
 
     /**
@@ -105,6 +112,14 @@ class Document extends Model implements DocumentInterface
     public function votes()
     {
         return $this->hasMany(Vote::class);
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatusValueAttribute()
+    {
+        return $this->getStatus()->getName();
     }
 
 }

@@ -50,6 +50,6 @@ class VoteBlankRepository implements VoteBlankRepositoryInterface
     public function save(VoteBlankInterface $blank): bool
     {
         /** @var VoteBlank $blank */
-        $blank->save();
+        return (bool) $blank->save();
     }
 }

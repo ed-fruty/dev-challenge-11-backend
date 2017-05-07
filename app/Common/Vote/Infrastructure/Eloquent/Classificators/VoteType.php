@@ -9,6 +9,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class VoteType extends Model implements VoteTypeInterface
 {
+    /**
+     * @var string
+     */
+    protected $table = 'vote_types';
+
+    /**
+     * @var array
+     */
+    protected $fillable = ['name'];
 
     /**
      * @return ClassificatorId

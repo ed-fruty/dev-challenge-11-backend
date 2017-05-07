@@ -29,4 +29,25 @@ class Voice
     {
         return (string) $this->value;
     }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        switch ((int) $this->value) {
+            case self::VOICE_APPROVED:
+                return 'Approved';
+            case self::VOICE_DECLINED:
+                return 'Declined';
+            case self::VOICE_ABSTAINED:
+                return 'Abstained';
+            case self::VOICE_NOT_VOTED:
+                return 'Not voted';
+            case self::VOICE_MISSED:
+                return 'Missed';
+            default:
+                return 'Undefined';
+        }
+    }
 }

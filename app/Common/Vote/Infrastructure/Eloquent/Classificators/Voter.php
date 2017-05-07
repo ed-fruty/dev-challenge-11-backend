@@ -9,10 +9,20 @@ use App\Common\Vote\Contracts\Vote\VoteInterface;
 use App\Common\Vote\Contracts\VoteBlank\VoteBlankInterface;
 use App\Common\Vote\Infrastructure\Eloquent\Vote\Vote;
 use App\Common\Vote\Infrastructure\Eloquent\VoteBlank\VoteBlank;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
 class Voter extends Model implements VoterInterface
 {
+    /**
+     * @var string
+     */
+    protected $table = 'voters';
+
+    /**
+     * @var array
+     */
+    protected $fillable = ['name'];
 
     /**
      * @return ClassificatorId
@@ -35,7 +45,7 @@ class Voter extends Model implements VoterInterface
      */
     public function getBlanks()
     {
-        return $this->getRelation('blanks');
+        return $this->getAttribute('blanks');
     }
 
     /**
@@ -43,7 +53,12 @@ class Voter extends Model implements VoterInterface
      */
     public function getVotes()
     {
-        return $this->getRelation('votes');
+        /** @var Collection $blanks */
+        $blanks = $this->getBlanks();
+
+        return $blanks->map(function(VoteBlank $blank) {
+            return $blank->getVote();
+        });
     }
 
     /**

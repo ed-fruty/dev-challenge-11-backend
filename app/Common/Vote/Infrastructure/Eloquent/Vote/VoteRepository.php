@@ -43,7 +43,7 @@ class VoteRepository implements VoteRepositoryInterface
     public function save(VoteInterface $vote): bool
     {
         /** @var Vote $vote */
-        $vote->save();
+        return (bool) $vote->save();
     }
 
     /**

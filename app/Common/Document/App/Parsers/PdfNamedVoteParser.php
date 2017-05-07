@@ -72,17 +72,31 @@ class PdfNamedVoteParser implements DocumentParserInterface, FileSystemFactoryAw
 
         $pdf = $this->parser->parseContent($content);
 
-        preg_match_all($this->getVotesContentRegex(), $pdf->getText(), $votesContent);
+        $text = $pdf->getText();
+        $text = str_replace('!', PHP_EOL,
+            str_replace(PHP_EOL, '',
+                str_replace(PHP_EOL . PHP_EOL, "!", $pdf->getText())
+            ))
+        ;
+        $text = str_replace(
+            '(прийнято / не прийнято)',
+            '(прийнято / не прийнято)' .PHP_EOL.PHP_EOL,
+            str_replace(PHP_EOL, '', $pdf->getText())
+        );
 
+        preg_match_all($this->getVotesContentRegex(), $text, $votesContent);
+
+        //dd($votesContent['content']);
+        //dd($text);
         foreach ((array) $votesContent['content'] as $index => $voteItem) {
 
-            //$voteItem = 'Система поіменного голосування &#34;Рада Голос&#34;Броварська міська рада23 позачергова сесія міської ради від 22.12.16Результат поіменного голосування:Про перехід до додатковиї питань №1 та №2. №: б/н За пропозицію№ п/пПрізвище, ім&#39;я та по-батькові депутатаРезультатголосування№ п/пПрізвище, ім&#39;я та по-батькові депутатаРезультатголосування1Сапожко Ігор ВасильовичЗа2Бабич Петро ІвановичЗа3Мельник Оксана МиколаївнаЗа4Лемпіцький Валерій АнатолійовичЗа5Оксютенко Володимир МиколайовичЗа6Тоцька Тетяна ПетрівнаЗа7Сенько Лідія ІванівнаЗа8Темченко Людмила ГригорівнаЗа9Василенко Андрій ПетровичЗа10Скотніков Юрій АнатолійовичНе голосував11Чаюн Володимир ГригоровичЗа12Крилова Тетяна МиколаївнаЗа13Семенов Максим ВолодимировичЗа14Бойко Сергій ОлександровичНе голосував15Шевчук Олег СергійовичУтримався16Здоровець Олексій МихайловичНе голосував17Андрієвський Вадим АнатолійовичЗа18Коваленко Вікторія МиколаївнаЗа19Кочубей Василь МихайловичЗа20Гредунов Євгеній ВалерійовичЗа21Іваненко Валерій ІвановичЗа22Черепейнік Леонід ВолодимировичНе голосував23Веремчук Ірина СергіївнаЗа24Опалько Володимир ГригоровичЗа25Батюк Сергій ІвановичНе голосував26Бельський Сергій КостянтиновичЗа27Негода Галина ВасилівнаУтримався28Тютюнник Андрій АнатолійовичЗа29Мутило Вадим АнатолійовичЗа30Дудко Борис ВолодимировичЗа31Чередник Юрій ПавловичЗа32Дяченко Аліна ОлексіївнаВідсутній33Лопатюк Андрій МихайловичЗа34Берестовий Олег ІгоровичНе голосував35Зінченко Микола АндрійовичЗа36Саук Андрій МиколайовичВідсутній37Білокінь Володимир ОлексійовичЗа ПІДСУМКИ ГОЛОСУВАННЯ&#34;За&#34; - 27 &#34;Проти&#34; - 0 &#34;Утрималися&#34; - 2Не брали участі у голосуванні - 6Відсутні на пленарному засіданні - 2Рішення: ПРИЙНЯТО(прийнято / не прийнято)';
+            //dd($votesContent['content']);
 
             preg_match($this->getVoteDetailsRegex(), $voteItem, $parsed);
 
-            if (! isset($parsed['topic'])) {
-                throw new \Exception(
-                    'Index' . $index.
+            if (! isset($parsed['council'])) {
+                dd(
+                    'Index' . $index,
                     'Message ' . $voteItem
                 );
             }
@@ -91,7 +105,7 @@ class PdfNamedVoteParser implements DocumentParserInterface, FileSystemFactoryAw
 //                dump($voteItem, $parsed);
 //            }
 
-
+//dd($parsed);
             $votes[] = (new ParsedVote)
                 ->setTopic(trim($parsed['topic']))
                 ->setNumber($this->makeNumber($parsed['number']))
@@ -104,7 +118,7 @@ class PdfNamedVoteParser implements DocumentParserInterface, FileSystemFactoryAw
                 ->setDecision($this->makeDecision($parsed['decision']))
                 ->setCouncil(trim($parsed['council']) . ' рада')
                 ->setSession(trim($parsed['session']))
-                //->setConvocation($this->parseConvocation($voteItem))
+                ->setConvocation('')
                 ->setType(trim($parsed['type']))
                 ->setVoters($this->parseVotersWithVote($parsed['votersTable']))
            ;
@@ -125,7 +139,7 @@ class PdfNamedVoteParser implements DocumentParserInterface, FileSystemFactoryAw
 
         for ($i = 0; $i < count($voters['id']); ++$i) {
             $parsedVoters[] = new ParsedVoter(
-                trim($voters['lastname'][$i]) . trim($voters['name'][$i]) . trim($voters['surname'][$i]),
+                trim($voters['lastname'][$i]) . ' ' . trim($voters['name'][$i]) . ' ' . trim($voters['surname'][$i]),
                 $this->makeVoice(trim($voters['voice'][$i]))
             );
         }
@@ -141,20 +155,20 @@ class PdfNamedVoteParser implements DocumentParserInterface, FileSystemFactoryAw
     {
         $voice = null;
 
-        switch (strtolower($value)) {
-            case 'за':
+        switch ($value) {
+            case 'За':
                 $voice = Voice::VOICE_APPROVED;
                 break;
-            case 'проти':
+            case 'Проти':
                 $voice = Voice::VOICE_DECLINED;
                 break;
-            case 'утримався':
+            case 'Утримався':
                 $voice = Voice::VOICE_ABSTAINED;
                 break;
-            case 'не голосував':
+            case 'Не голосував':
                 $voice = Voice::VOICE_NOT_VOTED;
                 break;
-            case 'відсутній':
+            case 'Відсутній':
                 $voice = Voice::VOICE_MISSED;
                 break;
         }
@@ -217,7 +231,7 @@ class PdfNamedVoteParser implements DocumentParserInterface, FileSystemFactoryAw
 
     protected function getVoteDetailsRegex()
     {
-        return '~Система поіменного голосування \&\#34\;Рада Голос\&\#34\;(?P<council>.*)рада(?P<session>\d+) позачергова сесія.* від (?P<date>(?P<dateDay>\d{2})\.(?P<dateMonth>\d{2})\.(?P<dateYear>\d{2,4}))Результат поіменного голосування\:(?P<topic>.*)\s+№: (?P<number>\d+\S+|\d+|бн|б/н)\s+(?P<type>.*)№ п\/пПрізвище, ім\&\#39\;я та по-батькові депутатаРезультатголосування№ п/пПрізвище, ім\&\#39\;я та по-батькові депутатаРезультатголосування(?P<votersTable>.*)\s+ПІДСУМКИ ГОЛОСУВАННЯ\&\#34\;За\&\#34\; - (?P<approvedAmount>\d+).*&#34;Проти&#34; - (?P<declinedAmount>\d+).*\&\#34\;Утрималися\&\#34\; - (?P<abstainedAmount>\d+)Не брали участі у голосуванні - (?P<notVotedAmount>\d+)Відсутні на пленарному засіданні - (?P<missedAmount>\d+)Рішення: (?P<decision>.*)\(прийнято \/ не прийнято\)~';
+        return '~Система поіменного голосування.*Рада Голос.*(\;|\")(?P<council>.*)рада(?P<session>\d+)(.+)(позачергов|чергов)(.+)сесі.*від(.+)(?P<date>(?P<dateDay>\d{2})\.(?P<dateMonth>\d{2})\.(?P<dateYear>\d{2,4}))Результат поіменного голосування\:(?P<topic>.*)\s+№: (?P<number>\S+)\s+(?P<type>.*)№ п\/пПрізвище(.+)та по-батькові депутата(.+)голосування(.+)голосування(?P<votersTable>.*)\s+ПІДСУМКИ ГОЛОСУВАННЯ(.+)За(.+) - (?P<approvedAmount>\d+)(.+)Проти(.+)(?P<declinedAmount>\d+)(\s+.+)Утрималися(.+) - (?P<abstainedAmount>\d+)Не брали участі у голосуванні - (?P<notVotedAmount>\d+)(.*)Відсутні на пленарному засіданні - (?P<missedAmount>\d+)Рішення: (?P<decision>.*)(\(прийнято \/ не прийнято\))~i';
     }
 
     /**
