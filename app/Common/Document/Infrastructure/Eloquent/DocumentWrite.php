@@ -3,6 +3,7 @@
 namespace App\Common\Document\Infrastructure\Eloquent;
 
 
+use App\Common\Document\Concern\ValueObjects\Status;
 use App\Common\Document\Contracts\DocumentInterface;
 use App\Common\Document\Contracts\DocumentWriteInterface;
 
@@ -50,11 +51,11 @@ class DocumentWrite extends Document implements DocumentWriteInterface
     }
 
     /**
-     * @param int $status
+     * @param Status $status
      */
-    public function setStatus(int $status)
+    public function setStatus(Status $status)
     {
-        $this->document->setAttribute(static::ATTRIBUTE_STATUS, $status);
+        $this->document->setAttribute(static::ATTRIBUTE_STATUS, $status->getValue());
     }
 
     /**

@@ -2,6 +2,7 @@
 namespace App\Common\Document\Contracts;
 
 use App\Common\Document\Concern\ValueObjects\DocumentId;
+use App\Common\Document\Concern\ValueObjects\Status;
 use App\Common\Vote\Contracts\Vote\VoteInterface;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -41,14 +42,9 @@ interface DocumentInterface
     public function getDisk() : string;
 
     /**
-     * @return int
+     * @return Status
      */
-    public function getStatus() : int;
-
-    /**
-     * @return bool
-     */
-    public function isProcessed() : bool;
+    public function getStatus() : Status;
 
     /**
      * @return VoteInterface[]|Collection

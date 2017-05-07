@@ -7,14 +7,20 @@ use App\Common\Document\Concern\ValueObjects\DocumentId;
 use App\Common\Document\Contracts\DocumentFactoryInterface;
 use App\Common\Document\Contracts\DocumentInterface;
 use App\Common\Document\Contracts\DocumentRepositoryInterface;
+use App\Common\Specifications\Contracts\SpecificationInterface;
+use App\Common\Specifications\Contracts\SpecificationSearchAwareInterface;
+use App\Common\Specifications\Traits\SpecificationSearchAware;
+use Illuminate\Contracts\Pagination\Paginator;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 /**
  * Class DocumentRepository
  * @package App\Common\Document\Infrastructure\Eloquent
  */
-class DocumentRepository implements DocumentRepositoryInterface
+class DocumentRepository implements DocumentRepositoryInterface, SpecificationSearchAwareInterface
 {
+    use SpecificationSearchAware;
 
     /**
      * @var Document
@@ -59,5 +65,17 @@ class DocumentRepository implements DocumentRepositoryInterface
     public function getDocumentFactory(): DocumentFactoryInterface
     {
         return new DocumentFactory;
+    }
+
+    /**
+     * @param SpecificationInterface $specification
+     * @return mixed|Collection|Paginator|DocumentInterface[]
+     */
+    public function match(SpecificationInterface $specification)
+    {
+        return $this->specificationSearch->search(
+            $this->model->newQuery(),
+            $specification
+        );
     }
 }

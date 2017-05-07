@@ -1,6 +1,8 @@
 <?php
 namespace App\Common\Document\Contracts;
 
+use App\Common\Document\Concern\ValueObjects\Status;
+
 interface DocumentWriteInterface
 {
     /**
@@ -19,9 +21,9 @@ interface DocumentWriteInterface
     public function setDisk(string $disk);
 
     /**
-     * @param int $status
+     * @param Status $status
      */
-    public function setStatus(int $status);
+    public function setStatus(Status $status);
 
     /**
      * @return DocumentInterface

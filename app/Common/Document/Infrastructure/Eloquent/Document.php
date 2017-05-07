@@ -4,6 +4,7 @@ namespace App\Common\Document\Infrastructure\Eloquent;
 
 
 use App\Common\Document\Concern\ValueObjects\DocumentId;
+use App\Common\Document\Concern\ValueObjects\Status;
 use App\Common\Document\Contracts\DocumentInterface;
 use App\Common\Vote\Contracts\Vote\VoteInterface;
 use App\Common\Vote\Infrastructure\Eloquent\Vote\Vote;
@@ -73,11 +74,11 @@ class Document extends Model implements DocumentInterface
     }
 
     /**
-     * @return int
+     * @return Status
      */
-    public function getStatus(): int
+    public function getStatus(): Status
     {
-        return (int) $this->getAttribute(static::ATTRIBUTE_STATUS);
+        return new Status($this->getAttribute(static::ATTRIBUTE_STATUS));
     }
 
     /**
