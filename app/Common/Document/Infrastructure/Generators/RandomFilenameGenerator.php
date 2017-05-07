@@ -14,6 +14,6 @@ class RandomFilenameGenerator implements FilenameGeneratorInterface
      */
     public function fromUploadedFile(UploadedFile $file): string
     {
-        return uniqid() . microtime(true) . mt_rand(100000, 999999) . '.' . $file->extension();
+        return mt_rand(100000, 999999) . uniqid() . microtime(true) . '.' . $file->extension();
     }
 }

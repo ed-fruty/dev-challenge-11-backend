@@ -5,6 +5,7 @@ namespace App\Common\Vote\Infrastructure\Eloquent\Vote;
 
 use App\Common\Document\Contracts\DocumentInterface;
 use App\Common\Document\Infrastructure\Eloquent\Document;
+use App\Common\Vote\Concern\ValueObjects\Decision;
 use App\Common\Vote\Concern\ValueObjects\VoteId;
 use App\Common\Vote\Contracts\Classificators\ConvocationInterface;
 use App\Common\Vote\Contracts\Classificators\CouncilInterface;
@@ -18,6 +19,7 @@ use App\Common\Vote\Infrastructure\Eloquent\Classificators\Council;
 use App\Common\Vote\Infrastructure\Eloquent\Classificators\Session;
 use App\Common\Vote\Infrastructure\Eloquent\Classificators\Voter;
 use App\Common\Vote\Infrastructure\Eloquent\Classificators\VoteType;
+use App\Common\Vote\Infrastructure\Eloquent\VoteBlank\VoteBlank;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
@@ -126,19 +128,11 @@ class Vote extends Model implements VoteInterface
     }
 
     /**
-     * @return int
+     * @return Decision
      */
-    public function getDecision(): int
+    public function getDecision(): Decision
     {
         return new Decision($this->getAttribute(static::ATTRIBUTE_DECISION));
-    }
-
-    /**
-     * @return bool
-     */
-    public function isApprovedDecision(): bool
-    {
-        // TODO: Implement isApprovedDecision() method.
     }
 
     /**
@@ -234,7 +228,7 @@ class Vote extends Model implements VoteInterface
      */
     public function voters()
     {
-        return $this->hasManyThrough(Voter::class, 'vote_blanks', 'id', 'voter_id');
+        return $this->hasManyThrough(Voter::class, VoteBlank::class);
     }
 
     /**

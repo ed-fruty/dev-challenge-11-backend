@@ -10,6 +10,7 @@ namespace App\Common\Vote\Concern\Commands;
 
 
 use App\Common\Vote\Concern\ValueObjects\ClassificatorId;
+use App\Common\Vote\Concern\ValueObjects\Voice;
 use App\Common\Vote\Concern\ValueObjects\VoteId;
 
 class CreateVoteBlankCommand
@@ -31,9 +32,9 @@ class CreateVoteBlankCommand
      * CreateVoteBlankCommand constructor.
      * @param VoteId $voteId
      * @param ClassificatorId $voterId
-     * @param int $voice
+     * @param Voice $voice
      */
-    public function __construct(VoteId $voteId, ClassificatorId $voterId, int $voice)
+    public function __construct(VoteId $voteId, ClassificatorId $voterId, Voice $voice)
     {
         $this->voteId = $voteId;
         $this->voterId = $voterId;
@@ -57,9 +58,9 @@ class CreateVoteBlankCommand
     }
 
     /**
-     * @return int
+     * @return Voice
      */
-    public function getVoice(): int
+    public function getVoice(): Voice
     {
         return $this->voice;
     }

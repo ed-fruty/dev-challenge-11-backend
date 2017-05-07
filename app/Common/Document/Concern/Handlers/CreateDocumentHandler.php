@@ -4,6 +4,7 @@ namespace App\Common\Document\Concern\Handlers;
 use App\Common\Document\Concern\Commands\CreateDocumentCommand;
 use App\Common\Document\Concern\Events\DocumentWasCreatedEvent;
 use App\Common\Document\Concern\Traits\DocumentRepositoryAware;
+use App\Common\Document\Concern\ValueObjects\Status;
 use App\Common\Document\Contracts\DocumentInterface;
 use App\Common\Document\Contracts\DocumentRepositoryAwareInterface;
 use App\Common\Document\Contracts\FilenameGeneratorInterface;
@@ -35,20 +36,16 @@ class CreateDocumentHandler implements DocumentRepositoryAwareInterface, EventDi
     public function handle(CreateDocumentCommand $command)
     {
         $filename = $this->filenameGenerator->fromUploadedFile($command->getFile());
-        $path = storage_path('documents');
-        $disk = env('FILESYSTEM_DRIVER');
 
         /*
          * Store file local or on the cloud
          */
-        if ($command->hasFile()) {
-            $command->getFile()->storeAs($path, $filename, compact('disk'));
-        }
+        $r = $command->getFile()->storeAs($command->getSavePath(), $filename);
 
         /*
          * Create document entity
          */
-        $document = $this->createDocumentInstance($filename, $path, $disk);
+        $document = $this->createDocumentInstance($filename, $command->getSavePath(), $command->getDisk());
 
         $this->documentRepository->save($document);
 
@@ -72,7 +69,7 @@ class CreateDocumentHandler implements DocumentRepositoryAwareInterface, EventDi
         $writeDocument->setPath($path);
         $writeDocument->setFilename($filename);
         $writeDocument->setDisk($disk);
-        $writeDocument->setStatus(DocumentInterface::STATUS_UNPROCESSED);
+        $writeDocument->setStatus(new Status(Status::STATUS_UNPROCESSED));
 
         return $writeDocument->getReadDocument();
     }

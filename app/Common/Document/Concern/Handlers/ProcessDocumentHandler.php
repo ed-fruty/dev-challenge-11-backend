@@ -81,7 +81,7 @@ class ProcessDocumentHandler implements
         foreach ($voters as $voter) {
             $voterEntity = $this->voterRepository->findByNameOrCreate($voter->getName());
 
-            $command = new CreateVoteBlankCommand($vote->getId(), $voterEntity->getId(), $voter->getVote());
+            $command = new CreateVoteBlankCommand($vote->getId(), $voterEntity->getId(), $voter->getVoice());
             $this->commandBus->dispatch($command);
         };
     }

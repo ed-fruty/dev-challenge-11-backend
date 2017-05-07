@@ -2,6 +2,8 @@
 
 namespace App\Common\Document\Concern\ValueObjects;
 
+use App\Common\Vote\Concern\ValueObjects\Voice;
+
 class ParsedVoter
 {
     /**
@@ -10,19 +12,19 @@ class ParsedVoter
     private $name;
 
     /**
-     * @var string
+     * @var Voice
      */
-    private $vote;
+    private $voice;
 
     /**
      * ParsedVoter constructor.
-     * @param $name
-     * @param $vote
+     * @param string $name
+     * @param Voice $voice
      */
-    public function __construct(string $name, string $vote)
+    public function __construct(string $name, Voice $voice)
     {
         $this->name = $name;
-        $this->vote = $vote;
+        $this->voice = $voice;
     }
 
     /**
@@ -34,10 +36,10 @@ class ParsedVoter
     }
 
     /**
-     * @return string
+     * @return Voice
      */
-    public function getVote(): string
+    public function getVoice(): Voice
     {
-        return $this->vote;
+        return $this->voice;
     }
 }

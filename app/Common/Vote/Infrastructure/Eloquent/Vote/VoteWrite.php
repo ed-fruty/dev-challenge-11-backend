@@ -4,6 +4,7 @@ namespace App\Common\Vote\Infrastructure\Eloquent\Vote;
 
 
 use App\Common\Document\Contracts\DocumentInterface;
+use App\Common\Vote\Concern\ValueObjects\Decision;
 use App\Common\Vote\Contracts\Classificators\ConvocationInterface;
 use App\Common\Vote\Contracts\Classificators\CouncilInterface;
 use App\Common\Vote\Contracts\Classificators\SessionInterface;
@@ -134,9 +135,9 @@ class VoteWrite extends Vote implements VoteWriteInterface
      * @param $decision
      * @return VoteWriteInterface
      */
-    public function setDecision($decision): VoteWriteInterface
+    public function setDecision(Decision $decision): VoteWriteInterface
     {
-        $this->vote->setAttribute(static::ATTRIBUTE_DECISION, $decision);
+        $this->vote->setAttribute(static::ATTRIBUTE_DECISION, $decision->getValue());
 
         return $this;
     }

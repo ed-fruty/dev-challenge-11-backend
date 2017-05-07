@@ -10,13 +10,19 @@ class CreateDocumentAction implements CommandBusAwareInterface
 {
     use CommandBusAware;
 
+    protected const DOCUMENT_SAVE_PATH = 'documents';
+
     /**
      * @param CreateDocumentRequest $request
      * @return mixed
      */
     public function __invoke(CreateDocumentRequest $request)
     {
-        $command = new CreateDocumentCommand($request->file('document'));
+        $command = new CreateDocumentCommand(
+            $request->file('document'),
+            self::DOCUMENT_SAVE_PATH,
+            (string) env('FILESYSTEM_DEFAULT_DISK', 'local')
+        );
 
         return $this->commandBus->dispatchNow($command);
     }

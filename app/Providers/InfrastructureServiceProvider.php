@@ -2,6 +2,9 @@
 
 namespace App\Providers;
 
+use App\Common\Document\App\Parsers\PdfNamedVoteParser;
+use App\Common\Document\Concern\Reader\DocumentReader;
+use App\Common\Document\Contracts\DocumentReaderInterface;
 use App\Common\Document\Contracts\DocumentRepositoryInterface;
 use App\Common\Document\Contracts\FilenameGeneratorInterface;
 use App\Common\Document\Infrastructure\Eloquent\DocumentRepository;
@@ -34,6 +37,7 @@ class InfrastructureServiceProvider extends ServiceProvider
      */
     protected $services = [
         DocumentRepositoryInterface::class      => DocumentRepository::class,
+        DocumentReaderInterface::class          => DocumentReader::class,
         FilenameGeneratorInterface::class       => RandomFilenameGenerator::class,
         ConvocationRepositoryInterface::class   => ConvocationRepository::class,
         CouncilRepositoryInterface::class       => CouncilRepository::class,
@@ -51,7 +55,9 @@ class InfrastructureServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-
+        $this->app->afterResolving(DocumentReaderInterface::class, function (DocumentReaderInterface $reader) {
+            $reader->addParser($this->app->make(PdfNamedVoteParser::class));
+        });
     }
 
     /**

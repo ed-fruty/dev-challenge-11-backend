@@ -6,6 +6,7 @@ namespace App\Common\Vote\Concern\Handlers;
 use App\Common\Laravel\Events\Contracts\EventDispatcherAwareInterface;
 use App\Common\Laravel\Events\Traits\EventDispatcherAware;
 use App\Common\Vote\Concern\Commands\CreateVoteBlankCommand;
+use App\Common\Vote\Concern\Events\VoteBlankWasCreatedEvent;
 use App\Common\Vote\Concern\Traits\ClassificatorRepositoriesAware;
 use App\Common\Vote\Concern\Traits\VoteBlankRepositoryAware;
 use App\Common\Vote\Concern\Traits\VoteRepositoryAware;
@@ -29,7 +30,7 @@ class CreateVoteBlankHandler implements EventDispatcherAwareInterface, VoteRepos
 
         $this->voteBlankRepository->save($blank);
 
-        $this->eventDispatcher->dispatch(new VoteBlankWasCreated($blank));
+        $this->eventDispatcher->dispatch(new VoteBlankWasCreatedEvent($blank));
 
         return $blank;
     }
@@ -50,6 +51,6 @@ class CreateVoteBlankHandler implements EventDispatcherAwareInterface, VoteRepos
             ->setVoice($command->getVoice());
 
 
-        return $writeBlank->getReadBlank();
+        return $writeBlank->getReadVoteBlank();
     }
 }

@@ -7,6 +7,8 @@ use App\Common\Vote\Concern\ValueObjects\ClassificatorId;
 use App\Common\Vote\Contracts\Classificators\VoterInterface;
 use App\Common\Vote\Contracts\Vote\VoteInterface;
 use App\Common\Vote\Contracts\VoteBlank\VoteBlankInterface;
+use App\Common\Vote\Infrastructure\Eloquent\Vote\Vote;
+use App\Common\Vote\Infrastructure\Eloquent\VoteBlank\VoteBlank;
 use Illuminate\Database\Eloquent\Model;
 
 class Voter extends Model implements VoterInterface
@@ -57,6 +59,6 @@ class Voter extends Model implements VoterInterface
      */
     public function votes()
     {
-        return $this->hasManyThrough(Vote::class, VoteBlank::class, 'id', 'vote_id');
+        return $this->hasManyThrough(Vote::class, VoteBlank::class);
     }
 }

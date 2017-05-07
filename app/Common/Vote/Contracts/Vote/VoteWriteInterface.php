@@ -3,6 +3,7 @@
 namespace App\Common\Vote\Contracts\Vote;
 
 use App\Common\Document\Contracts\DocumentInterface;
+use App\Common\Vote\Concern\ValueObjects\Decision;
 use App\Common\Vote\Contracts\Classificators\ConvocationInterface;
 use App\Common\Vote\Contracts\Classificators\CouncilInterface;
 use App\Common\Vote\Contracts\Classificators\SessionInterface;
@@ -69,7 +70,7 @@ interface VoteWriteInterface
      * @param $decision
      * @return VoteWriteInterface
      */
-    public function setDecision($decision): VoteWriteInterface;
+    public function setDecision(Decision $decision): VoteWriteInterface;
 
     /**
      * @param CouncilInterface $council

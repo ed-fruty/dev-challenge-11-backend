@@ -5,6 +5,7 @@ use App\Common\Document\Concern\Commands\MarkDocumentAsProcessCommand;
 use App\Common\Document\Concern\Commands\MarkDocumentAsProcessedCommand;
 use App\Common\Document\Concern\Events\DocumentWasProcessedEvent;
 use App\Common\Document\Concern\Traits\DocumentRepositoryAware;
+use App\Common\Document\Concern\ValueObjects\Status;
 use App\Common\Document\Contracts\DocumentInterface;
 use App\Common\Document\Contracts\DocumentRepositoryAwareInterface;
 use App\Common\Laravel\Events\Contracts\EventDispatcherAwareInterface;
@@ -22,7 +23,7 @@ class MarkDocumentAsProcessedHandler implements DocumentRepositoryAwareInterface
         $document = $this->documentRepository->findOrFail($command->getDocumentId());
 
         $writeDocument = $this->documentRepository->getDocumentFactory()->createWriteDocument($document);
-        $writeDocument->setStatus(DocumentInterface::STATUS_PROCESSED);
+        $writeDocument->setStatus(new Status(Status::STATUS_PROCESSED));
 
         $this->documentRepository->save($document);
 

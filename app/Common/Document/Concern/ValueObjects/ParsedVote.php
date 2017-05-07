@@ -2,6 +2,7 @@
 
 namespace App\Common\Document\Concern\ValueObjects;
 
+use App\Common\Vote\Concern\ValueObjects\Decision;
 use Carbon\Carbon;
 
 class ParsedVote
@@ -47,7 +48,7 @@ class ParsedVote
     protected $missedAmount;
 
     /**
-     * @var int
+     * @var Decision
      */
     protected $decision;
 
@@ -67,7 +68,7 @@ class ParsedVote
     protected $convocation;
 
     /**
-     * @var int
+     * @var string
      */
     protected $type;
 
@@ -222,18 +223,18 @@ class ParsedVote
     }
 
     /**
-     * @return int
+     * @return Decision
      */
-    public function getDecision(): int
+    public function getDecision(): Decision
     {
         return $this->decision;
     }
 
     /**
-     * @param int $decision
+     * @param Decision $decision
 	 * @return $this
      */
-    public function setDecision(int $decision)
+    public function setDecision(Decision $decision)
     {
         $this->decision = $decision;
 		return $this;
@@ -294,18 +295,18 @@ class ParsedVote
     }
 
     /**
-     * @return int
+     * @return string
      */
-    public function getType(): int
+    public function getType(): string
     {
         return $this->type;
     }
 
     /**
-     * @param int $type
+     * @param string $type
 	 * @return $this
      */
-    public function setType(int $type)
+    public function setType($type)
     {
         $this->type = $type;
 		return $this;

@@ -19,7 +19,7 @@ class CreateDocumentRequest extends FormRequest
     public function rules()
     {
         return [
-            'document'  => 'file|mimes:pdf'
+            'document'  => 'required|file|mimes:pdf'
         ];
     }
 }

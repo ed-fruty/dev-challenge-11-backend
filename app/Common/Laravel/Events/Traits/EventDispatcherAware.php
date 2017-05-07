@@ -12,9 +12,9 @@ trait EventDispatcherAware
     protected $eventDispatcher;
 
     /**
-     * @param EventDispatcherAwareInterface $eventDispatcher
+     * @param Dispatcher $eventDispatcher
      */
-    public function setEventDispatcher(EventDispatcherAwareInterface $eventDispatcher)
+    public function setEventDispatcher(Dispatcher $eventDispatcher)
     {
         $this->eventDispatcher = $eventDispatcher;
     }

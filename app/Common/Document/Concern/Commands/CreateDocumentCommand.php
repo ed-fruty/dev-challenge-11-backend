@@ -9,14 +9,20 @@ final class CreateDocumentCommand
      * @var UploadedFile
      */
     private $file;
+    private $savePath;
+    private $disk;
 
     /**
      * CreateDocumentCommand constructor.
      * @param UploadedFile $file
+     * @param string $savePath
+     * @param string $disk
      */
-    public function __construct(UploadedFile $file)
+    public function __construct(UploadedFile $file, string $savePath, string $disk)
     {
         $this->file = $file;
+        $this->savePath = $savePath;
+        $this->disk = $disk;
     }
 
     /**
@@ -28,10 +34,18 @@ final class CreateDocumentCommand
     }
 
     /**
-     * @return bool
+     * @return mixed
      */
-    public function hasFile(): bool
+    public function getSavePath()
     {
-        return $this->file instanceof UploadedFile;
+        return $this->savePath;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDisk()
+    {
+        return $this->disk;
     }
 }

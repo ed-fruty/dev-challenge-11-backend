@@ -3,6 +3,7 @@
 namespace App\Common\Vote\Contracts\Vote;
 
 use App\Common\Document\Contracts\DocumentInterface;
+use App\Common\Vote\Concern\ValueObjects\Decision;
 use App\Common\Vote\Concern\ValueObjects\VoteId;
 use App\Common\Vote\Contracts\Classificators\ConvocationInterface;
 use App\Common\Vote\Contracts\Classificators\CouncilInterface;
@@ -60,14 +61,9 @@ interface VoteInterface
     public function getMissedAmount() : int;
 
     /**
-     * @return int
+     * @return Decision
      */
-    public function getDecision() : int;
-
-    /**
-     * @return bool
-     */
-    public function isApprovedDecision() : bool;
+    public function getDecision() : Decision;
 
     /**
      * @return CouncilInterface
