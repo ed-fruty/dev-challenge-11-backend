@@ -3,6 +3,7 @@
 namespace App\Common\Vote\Contracts\VoteBlank;
 
 
+use App\Common\Vote\Concern\ValueObjects\Voice;
 use App\Common\Vote\Concern\ValueObjects\VoteBlankId;
 use App\Common\Vote\Contracts\Classificators\VoterInterface;
 use App\Common\Vote\Contracts\Vote\VoteInterface;
